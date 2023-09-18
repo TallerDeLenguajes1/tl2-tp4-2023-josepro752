@@ -8,7 +8,7 @@ public enum Estado {
 
 public class Cadeteria {
     private string nombre;
-    private int telefono;
+    private long telefono;
     private List<Cadete> cadetes;
     private List<Pedido> pedidos;
     private static Cadeteria instance;
@@ -40,12 +40,12 @@ public class Cadeteria {
     }
     // PROPIEDADES
     public string Nombre { get => nombre; set => nombre = value; }
-    public int Telefono { get => telefono; set => telefono = value; }
+    public long Telefono { get => telefono; set => telefono = value; }
     public List<Cadete> Cadetes { get => cadetes; set => cadetes = value; }
     public List<Pedido> Pedidos { get => pedidos; set => pedidos = value; }
 
     // CONSTRUCTORES
-    public Cadeteria(string nombre, int telefono) {
+    public Cadeteria(string nombre, long telefono) {
         Nombre = nombre;
         Telefono = telefono;
         Cadetes = new List<Cadete>();
@@ -56,7 +56,7 @@ public class Cadeteria {
     public Informe GetInforme(){
         return new Informe(Cadetes,Pedidos);
     }
-    public Pedido TomarPedido(string nombre, string direccion, int telefono, string datosRef,  string observacion) {
+    public Pedido TomarPedido(string nombre, string direccion, long telefono, string datosRef,  string observacion) {
         var cliente = new Cliente(nombre, direccion, telefono,datosRef);
         var pedido = new Pedido(Pedidos.Count(),observacion,cliente);
         Pedidos.Add(pedido);
@@ -170,15 +170,15 @@ public class Pedido {
 public class Cliente {
     private string nombre;
     private string direccion;
-    private int telefono;
+    private long telefono;
     private string datosRefDireccion;
 
     public string Nombre { get => nombre; set => nombre = value; }
     public string Direccion { get => direccion; set => direccion = value; }
-    public int Telefono { get => telefono; set => telefono = value; }
+    public long Telefono { get => telefono; set => telefono = value; }
     public string DatosRefDireccion { get => datosRefDireccion; set => datosRefDireccion = value; }
     
-    public Cliente (string nombre, string direccion, int telefono, string datosRefDireccion) {
+    public Cliente (string nombre, string direccion, long telefono, string datosRefDireccion) {
         Nombre = nombre;
         Direccion = direccion;
         Telefono = telefono;

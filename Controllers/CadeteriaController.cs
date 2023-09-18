@@ -37,4 +37,15 @@ public class CadeteriaController : ControllerBase
     public ActionResult <string> GetInforme() {
         return (Ok(cadeteria.GetInforme()));
     }
+
+    [HttpPost ("Add_Pedidos")]
+    public ActionResult <string> AddPedidos(string nombre, string direccion, long telefono, string datosRef, string observacion) {
+        cadeteria.TomarPedido(nombre,direccion,telefono,datosRef,observacion);
+        var pedido = cadeteria.Pedidos.FirstOrDefault(p => p.Numero == cadeteria.Pedidos.Count()-1);
+        if (pedido != null) {
+            return (Ok(pedido));
+        }
+        return StatusCode(500,"No se pudo tomar el pedido");
+    }
+
 }
