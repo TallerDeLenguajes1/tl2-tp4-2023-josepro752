@@ -66,11 +66,19 @@ public class CadeteriaController : ControllerBase
     public ActionResult <string> CambiarEstadoPedido(int numPedido, int estado) {
         var pedido = cadeteria.Pedidos.FirstOrDefault(p => p.Numero == numPedido);
         if (pedido != null) {
-            if (estado > 0 && estado < 4) {
-                pedido.Estado = (Estado)Enum.Parse(typeof(Estado),estado.ToString());
-                return (Ok(pedido));
+            if (pedido.Estado == Estado.SinEntregar) {
+                if (estado > 0 && estado < 4) {
+                    pedido.Estado = (Estado)Enum.Parse(typeof(Estado),estado.ToString());
+                    return (Ok(pedido));
+                }
+                return StatusCode(500,"El estado que quiere asgirnar no es valido");
+            } else {
+                if (pedido.Estado == Estado.Entregado) {
+                    return NotFound("El pedido ya fue entregado");
+                } else {
+                    return NotFound("El pedido ya fue cancelado");
+                }
             }
-            return StatusCode(500,"El estado no es valido");
         }
         return StatusCode(500,"No se pudo encontrar el pedido");
     }
