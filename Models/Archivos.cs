@@ -6,8 +6,8 @@ using System.Text.Json.Serialization;
 namespace EspacioArchivos;
 public abstract class AccesoADatos{
     public abstract bool Existe(string nombre);
-    public abstract Cadeteria LeerCadeteria(string nombre);
-    public abstract void LeerCadetes(string nombre, List<Cadete> Cadts);
+    public abstract Cadeteria LeerCadeteria();
+    public abstract List<Cadete> LeerCadetes();
     public void GuardarResumen(Cadeteria Cdtria){
         try{
             // Abre el archivo para escritura (si no existe, lo crea; si existe, sobrescribe el contenido)
@@ -50,23 +50,24 @@ public class AccesoJSON : AccesoADatos{
     public override bool Existe(string nombre){
         return File.Exists(nombre+".json")||File.Exists(nombre+".txt");
     }
-    public override Cadeteria LeerCadeteria(string nombre){
+    public override Cadeteria LeerCadeteria(){
         Cadeteria cadet = null;
-        if (Existe(nombre)){
-            string json = File.ReadAllText(nombre+".json");
+        if (Existe("Cadeteria.json")){
+            string json = File.ReadAllText("Cadeteria.json");
             cadet = JsonSerializer.Deserialize<Cadeteria>(json);
         } else {
             Console.WriteLine("No existe el json");
         }
         return cadet;
     }
-    public override void LeerCadetes(string nombre, List<Cadete> Cadts){
-        if (Existe(nombre)){
-            string json = File.ReadAllText(nombre+".json");
-            Cadts = JsonSerializer.Deserialize<List<Cadete>>(json);
+    public override List<Cadete> LeerCadetes(){
+        if (Existe("Cadetes.json")){
+            string json = File.ReadAllText("Cadetes.json");
+            return JsonSerializer.Deserialize<List<Cadete>>(json);
         } else {
             Console.WriteLine("No existe el json");
         }
+        return null;
     }
     public void GuardarJSON(string nombre, Cadeteria cadeterria) {
         var json = JsonSerializer.Serialize(cadeterria);
@@ -82,8 +83,8 @@ public class AccesoCSV : AccesoADatos{
     public override bool Existe(string nombre){
         return File.Exists(nombre+".csv")||File.Exists(nombre+".txt");
     }
-    public override Cadeteria LeerCadeteria(string nombre){
-        using(TextFieldParser ruta = new TextFieldParser(nombre+".csv")){
+    public override Cadeteria LeerCadeteria(){
+        using(TextFieldParser ruta = new TextFieldParser("Cadeteria.csv")){
             ruta.TextFieldType = FieldType.Delimited;
             ruta.SetDelimiters(",",";");
             while(!ruta.EndOfData){
@@ -101,9 +102,10 @@ public class AccesoCSV : AccesoADatos{
         }
         return null;
     }
-    public override void LeerCadetes(string nombre, List<Cadete> Cadts){
-        using(TextFieldParser ruta = new TextFieldParser(nombre+".csv")){
+    public override List<Cadete> LeerCadetes(){
+        using(TextFieldParser ruta = new TextFieldParser("Cadetes.csv")){
             ruta.TextFieldType = FieldType.Delimited;
+            var Cadts = new List<Cadete>();
             ruta.SetDelimiters(",",";");
             while(!ruta.EndOfData){
                 string[] filas = ruta.ReadFields();
@@ -119,6 +121,7 @@ public class AccesoCSV : AccesoADatos{
                     System.Console.WriteLine("no tiene el formato adecuado");
                 }
             }
+            return Cadts;
         }
     }
 }
