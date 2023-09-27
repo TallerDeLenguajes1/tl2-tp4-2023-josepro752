@@ -1,8 +1,7 @@
-using EspacioArchivos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace tl2_tp4_2023_josepro752.Controllers;
-
+using EspacioCadeteria;
 [ApiController]
 [Route("[controller]")]
 public class CadeteriaController : ControllerBase
@@ -44,6 +43,7 @@ public class CadeteriaController : ControllerBase
         cadeteria.TomarPedido(nombre,direccion,telefono,datosRef,observacion);
         var pedido = cadeteria.Pedidos.FirstOrDefault(p => p.Numero == cadeteria.Pedidos.Count()-1);
         if (pedido != null) {
+            AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
             return (Ok(pedido));
         }
         return StatusCode(500,"No se pudo tomar el pedido");
@@ -56,6 +56,7 @@ public class CadeteriaController : ControllerBase
         if (pedido != null) {
             if (cadete != null) {
                 pedido.IdCadete = idCadete;
+                AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
                 return (Ok(pedido));
             }
             return StatusCode(500,"No se pudo encontrar el cadete");
@@ -70,6 +71,7 @@ public class CadeteriaController : ControllerBase
             if (pedido.Estado == Estado.SinEntregar) {
                 if (estado > 0 && estado < 4) {
                     pedido.Estado = (Estado)Enum.Parse(typeof(Estado),estado.ToString());
+                    AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
                     return (Ok(pedido));
                 }
                 return StatusCode(500,"El estado que quiere asgirnar no es valido");

@@ -3,15 +3,17 @@ namespace EspacioCadeteria;
 using System.Text.Json;
 using tl2_tp4_2023_josepro752;
 
-public class AccesoADatosPedidos {
-    public List<Pedido> Obtener() {
-        if (File.Exists("Pedidos.json")) {
-            var pedidos = JsonSerializer.Deserialize<List<Pedido>>("Pedidos.json");
+public static class AccesoADatosPedidos {
+    public static List<Pedido> Obtener() {
+        var path = "Pedidos.json";
+        if (File.Exists(path)) {
+            string json = File.ReadAllText(path);
+            var pedidos = JsonSerializer.Deserialize<List<Pedido>>(json);
             return pedidos;
         }
         return null;
     }
-    public void Guardar(List<Pedido> Pedidos) {
+    public static void Guardar(List<Pedido> Pedidos) {
         var json = JsonSerializer.Serialize(Pedidos);
         File.WriteAllText("Pedidos.json",json);
     }

@@ -1,6 +1,5 @@
 namespace tl2_tp4_2023_josepro752;
 using System.Linq;
-using EspacioArchivos;
 using EspacioCadeteria;
 
 public enum Estado {
@@ -15,7 +14,7 @@ public class Cadeteria {
     private List<Cadete> cadetes;
     private List<Pedido> pedidos;
     private static Cadeteria instance;
-    private AccesoADatosPedidos accesosPedidos;
+    //private AccesoADatosPedidos accesosPedidos;
     private Cadeteria()
     {
         // Inicializa las propiedades si es necesario.
@@ -38,9 +37,8 @@ public class Cadeteria {
             if (instance == null)
             {
                 instance = new Cadeteria();
-                var json = new AccesoJSON();
-                instance = json.LeerCadeteria();
-                instance.cadetes = json.LeerCadetes();
+                instance = AccesoADatosCadeteria.Obtener();
+                instance.cadetes = AccesoADatosCadetes.Obtener();
             }
             return instance;
         }
@@ -50,6 +48,7 @@ public class Cadeteria {
     public long Telefono { get => telefono; set => telefono = value; }
     public List<Cadete> Cadetes { get => cadetes; set => cadetes = value; }
     public List<Pedido> Pedidos { get => pedidos; set => pedidos = value; }
+    //public AccesoADatosPedidos AccesosPedidos { get => accesosPedidos; set => accesosPedidos = value; }
 
     // CONSTRUCTORES
     public Cadeteria(string nombre, long telefono) {
