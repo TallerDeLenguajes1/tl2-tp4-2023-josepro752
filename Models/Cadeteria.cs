@@ -1,6 +1,7 @@
 namespace tl2_tp4_2023_josepro752;
 using System.Linq;
 using EspacioArchivos;
+using EspacioCadeteria;
 
 public enum Estado {
     SinEntregar =1,
@@ -14,6 +15,7 @@ public class Cadeteria {
     private List<Cadete> cadetes;
     private List<Pedido> pedidos;
     private static Cadeteria instance;
+    private AccesoADatosPedidos accesosPedidos;
     private Cadeteria()
     {
         // Inicializa las propiedades si es necesario.
