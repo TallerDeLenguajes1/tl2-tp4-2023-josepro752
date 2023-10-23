@@ -1,6 +1,6 @@
 namespace EspacioCadeteria;
 
-public enum EstadoPedido {
+public enum Estado {
     EnPreparacion,
     Entregado,
     Cancelado
@@ -9,14 +9,14 @@ public class Pedido {
     private int id;
     private string nombre;
     private string observacion;
-    private EstadoPedido estado;
+    private Estado estado;
     private Cliente cliente;
     private int idCad;
 
     public int Id { get => id; set => id = value; }
     public string Nombre { get => nombre; set => nombre = value; }
     public string Observacion { get => observacion; set => observacion = value; }
-    public EstadoPedido Estado { get => estado; set => estado = value; }
+    public Estado Estado { get => estado; set => estado = value; }
     public Cliente Cliente { get => cliente; set => cliente = value; }
     public int IdCad { get => idCad; set => idCad = value; }
 
@@ -24,7 +24,7 @@ public class Pedido {
         //Constructor vacío
     }
 
-    public Pedido(int id, string nombre, string observacion, EstadoPedido estado, Cliente cliente) {
+    public Pedido(int id, string nombre, string observacion, Estado estado, Cliente cliente) {
         this.id = id;
         this.nombre = nombre;
         this.observacion = observacion;

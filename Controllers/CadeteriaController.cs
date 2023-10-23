@@ -1,5 +1,5 @@
-using EspacioArchivos;
 using Microsoft.AspNetCore.Mvc;
+using EspacioCadeteria;
 
 namespace tl2_tp4_2023_josepro752.Controllers;
 
@@ -13,7 +13,7 @@ public class CadeteriaController : ControllerBase
     public CadeteriaController(ILogger<CadeteriaController> logger)
     {
         _logger = logger;
-        cadeteria = Cadeteria.Instance;
+        cadeteria = Cadeteria.GetInstance();
     }
 
     [HttpGet]
@@ -22,15 +22,37 @@ public class CadeteriaController : ControllerBase
     }
 
     [HttpGet]
+    [Route("Pedidos")]
+    public ActionResult <string> GetPedidos() {
+        return (Ok(cadeteria.GetPedidos()));
+    }
+
+    [HttpGet]
+    [Route("Cadete")]
+    public ActionResult <string> GetCadete() {
+        return (Ok(cadeteria.GetCadetes()));
+    }
+
+    [HttpGet]
     [Route("Informe")]
     public ActionResult <string> GetInforme() {
-        return (Ok(cadeteria.GetInforme()));
+        return (Ok(cadeteria.GetInforme(cadeteria)));
+    }
+
+    [HttpPost ("Add_Cadete")]
+    public ActionResult <string> AddCadete(string nombre, string direccion, long telefono) {
+        cadeteria.AddCadete(nombre,direccion,telefono);
+        var cadete = cadeteria.GetCadetes().FirstOrDefault(c => c.Id == cadeteria.GetCadetes().Count()-1);
+        if (cadete != null) {
+            return (Ok(cadete));
+        }
+        return StatusCode(500,"No se pudo tomar el pedido");
     }
 
     [HttpPost ("Add_Pedidos")]
-    public ActionResult <string> AddPedidos(string nombre, string direccion, long telefono, string datosRef, string observacion) {
-        cadeteria.TomarPedido(nombre,direccion,telefono,datosRef,observacion);
-        var pedido = cadeteria.Pedidos.FirstOrDefault(p => p.Numero == cadeteria.Pedidos.Count()-1);
+    public ActionResult <string> AddPedidos(string nombre,string observacion, Estado estado, Cliente cliente) {
+        cadeteria.AddPedido(nombre,observacion,estado,cliente);
+        var pedido = cadeteria.GetPedidos().FirstOrDefault(p => p.Id == cadeteria.GetPedidos().Count()-1);
         if (pedido != null) {
             return (Ok(pedido));
         }
@@ -39,11 +61,11 @@ public class CadeteriaController : ControllerBase
 
     [HttpPut ("Asignar_Pedido")]
     public ActionResult <string> AsignarPedido(int idCadete, int numPedido) {
-        var pedido = cadeteria.Pedidos.FirstOrDefault(p => p.Numero == numPedido);
-        var cadete = cadeteria.Cadetes.FirstOrDefault(p => p.Id == idCadete);
+        var pedido = cadeteria.GetPedidos().FirstOrDefault(p => p.Id == numPedido);
+        var cadete = cadeteria.GetCadetes().FirstOrDefault(p => p.Id == idCadete);
         if (pedido != null) {
             if (cadete != null) {
-                pedido.IdCadete = idCadete;
+                pedido.IdCad = idCadete;
                 return (Ok(pedido));
             }
             return StatusCode(500,"No se pudo encontrar el cadete");
@@ -53,9 +75,9 @@ public class CadeteriaController : ControllerBase
 
     [HttpPut ("Cambiar_Estado_Pedido")]
     public ActionResult <string> CambiarEstadoPedido(int numPedido, int estado) {
-        var pedido = cadeteria.Pedidos.FirstOrDefault(p => p.Numero == numPedido);
+        var pedido = cadeteria.GetPedidos().FirstOrDefault(p => p.Id == numPedido);
         if (pedido != null) {
-            if (pedido.Estado == Estado.SinEntregar) {
+            if (pedido.Estado == Estado.EnPreparacion) {
                 if (estado > 0 && estado < 4) {
                     pedido.Estado = (Estado)Enum.Parse(typeof(Estado),estado.ToString());
                     return (Ok(pedido));

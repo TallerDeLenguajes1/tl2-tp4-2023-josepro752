@@ -29,14 +29,27 @@ public class Cadeteria {
     public List<Pedido> GetPedidos() {
         return accesoADatosPedidos.Obtener();
     }
-    public Pedido AddPedido(string nombre, string observacion, EstadoPedido estado, Cliente cliente) {
+    public Cadete GetCadete(int idCad) {
+        return accesoADatosCadetes.Obtener().FirstOrDefault(cadete => cadete.Id == idCad);//retorna null si no lo encuentra
+    }
+    public Pedido GetPedido(int idPed) {
+        return accesoADatosPedidos.Obtener().FirstOrDefault(pedido => pedido.Id == idPed);//retorna null si no lo encuentra
+    }
+    public Cadete AddCadete(string nombre, string direccion, long telefono) {
+        var listaCad = GetCadetes();
+        var cadete = new Cadete(listaCad.Count(),nombre,direccion,telefono);
+        listaCad.Add(cadete);
+        accesoADatosCadetes.Guardar(listaCad);
+        return cadete;
+    }
+    public Pedido AddPedido(string nombre, string observacion, Estado estado, Cliente cliente) {
         var listaPed = accesoADatosPedidos.Obtener();
         var pedido = new Pedido(listaPed.Count(),nombre,observacion,estado,cliente);
         listaPed.Add(pedido);
         accesoADatosPedidos.Guardar(listaPed);
         return pedido;
     }
-    public Pedido CambiarEstadoPedido(int idPed, EstadoPedido estado) {
+    public Pedido CambiarEstadoPedido(int idPed, Estado estado) {
         var listaPed = GetPedidos();
         Pedido ped = null;
         foreach(var pedido in listaPed) {
@@ -75,7 +88,7 @@ public class Cadeteria {
     }
     public int ContarPedidos(int idCad) {
         var listaPed = accesoADatosPedidos.Obtener();
-        return listaPed.Count(pedido => pedido.IdCad == idCad && pedido.Estado == EstadoPedido.Entregado);
+        return listaPed.Count(pedido => pedido.IdCad == idCad && pedido.Estado == Estado.Entregado);
     }
     public List<InformeCadete> GetInforme(Cadeteria cadeteria) {
         return Informe.GetInforme(cadeteria);
