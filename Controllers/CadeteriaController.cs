@@ -22,18 +22,6 @@ public class CadeteriaController : ControllerBase
     }
 
     [HttpGet]
-    [Route("Pedidos")]
-    public ActionResult <string> GetPedidos() {
-        return (Ok(cadeteria.Pedidos));
-    }
-
-    [HttpGet]
-    [Route("Cadete")]
-    public ActionResult <string> GetCadete() {
-        return (Ok(cadeteria.Cadetes));
-    }
-
-    [HttpGet]
     [Route("Informe")]
     public ActionResult <string> GetInforme() {
         return (Ok(cadeteria.GetInforme()));
